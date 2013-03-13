@@ -71,7 +71,7 @@ include("parser.php");
                             <select id="building" name="building">
                                 <option value="">all</option>
                                 <?php foreach($classrooms as $building => $rooms):?>
-                                    <option <?php echo ($building == $formblding ? "selected" : "");?> value="<?=$building?>"><?=$building?></option>
+                                    <option <?php echo ($building == $formbuilding ? "selected" : "");?> value="<?=$building?>"><?=$building?></option>
                                 <?php endforeach;?>
                             </select>
                         </label>
@@ -79,37 +79,32 @@ include("parser.php");
                             Day
                             <select id="day" name="day" class="input-small">
                                 <?php foreach($days as $day):?>
-                                    <option <?php echo ($day == $formday ? "selected" : "");?> value="<?=$day?>"><?=$day?></option>
+                                    <option <?=($day == $formday ? "selected" : "");?> value="<?=$day?>"><?=$day?></option>
                                 <?php endforeach;?>
                             </select>
                         </label>
                         <label class="inline">
                             Time
                             <select id="hour" name="hour" class="input-mini">
-                                <option value="08">8</option>
-                                <option value="09">9</option>
-                                <option value="10">10</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
-                                <option value="13">13</option>
-                                <option value="14">14</option>
-                                <option value="15">15</option>
-                                <option value="16">16</option>
-                                <option value="17">17</option>
-                                <option value="18">18</option>
-                                <option value="19">19</option>
-                                <option value="20">20</option>
+                                <?php $hours = array("08","09","10","11","12","13","14","15","16","17","18","19","20",);
+                                foreach($hours as $hour):?>
+                                    <option <?=($hour == $formhour ? "selected" : "");?> value="<?=$hour?>"><?=(int)$hour?></option>
+                                <?php endforeach;?>
                             </select>
                             <span class="add-on">:</span>
                             <select id="min" name="min" class="input-mini">
+                                <?php $mins = array("00","30");
+                                foreach($mins as $min):?>
+                                    <option <?=($min == $formmin ? "selected" : "");?> value="<?=$min?>"><?=$min?></option>
+                                <?php endforeach;?>
                                 <option value="00">00</option>
                                 <option value="30">30</option>
                             </select>
                         </label>
                         <label class="inline">
                             Capacity
-                            <!-- <input type="text" class="input-small" id="capacity" name="capacity"> -->
-                            <input type="range" name="capacity" min="1" max="600">
+                            <input type="text" class="input-small" id="capacity" name="capacity" value="<?=($capacity != "" ? $capacity : "")?>">
+                            <!-- <input type="range" name="capacity" min="1" max="600"> -->
                         </label>
                         <button type="submit" class="btn">Search</button>
                     </form>
@@ -121,39 +116,42 @@ include("parser.php");
                         <tr>
                             <th>building</th><th>room</th><th>capacity</th><th>duration</th>
                         </tr>
-                    <?php foreach($classrooms as $building => $rooms) {
-                        foreach($rooms as $room => $attrib) {
-                            if($attrib['capacity'] >= $formcapacity) {
-                                foreach($attrib['schedule'] as $day => $hours) {
-                                    if($day == $formday) {
-                                        if(!isset($hours[$formtime])) {
-                                            echo("<tr><td>$building</td><td>$room</td><td>" . $attrib['capacity'] . "</td>");
+                        <?php foreach($classrooms as $building => $rooms) {
+                            if(($formbuilding != "" && $building == $formbuilding) || $formbuilding == "") {
+                                foreach($rooms as $room => $attrib) {
+                                    if($attrib['capacity'] >= $formcapacity) {
+                                        foreach($attrib['schedule'] as $day => $hours) {
+                                            if($day == $formday) {
+                                                if(!isset($hours[$formtime])) {
+                                                    echo("<tr><td>$building</td><td>$room</td><td>" . $attrib['capacity'] . "</td>");
 
-                                            $uptime = $formtime;
-                                            $duration = "00:30";
-                                            //echo "<p>duration = " . date("H:i", $duration) . "</p>";
+                                                    $uptime = $formtime;
+                                                    $duration = "00:30";
+                                                    //echo "<p>duration = " . date("H:i", $duration) . "</p>";
 
-                                            $uptime = date("H:i", strtotime("$uptime + 30 minutes"));
-                                            //echo $hours[$uptime];
-                                            while(!isset($hours[$uptime]) && (strtotime($uptime) < strtotime("20:00"))) {
-                                                $duration = date("H:i", strtotime("$duration + 30 minutes"));
-                                                //echo "<p>" . date($duration) . "</p>";
+                                                    $uptime = date("H:i", strtotime("$uptime + 30 minutes"));
+                                                    //echo $hours[$uptime];
+                                                    while(!isset($hours[$uptime]) && (strtotime($uptime) < strtotime("20:00"))) {
+                                                        $duration = date("H:i", strtotime("$duration + 30 minutes"));
+                                                        //echo "<p>" . date($duration) . "</p>";
 
-                                                //loop increment
-                                                $uptime = date("H:i", strtotime("$uptime + 30 minutes"));
+                                                        //loop increment
+                                                        $uptime = date("H:i", strtotime("$uptime + 30 minutes"));
+                                                    }
+
+                                                    echo "<td>" . date("G:i", strtotime($duration)) . "h</td></tr>";
+                                                    //echo "<td colspan='4'><pre>" . print_r($attrib, true) . "</pre></td>";
+                                                }
                                             }
-
-                                            echo "<td>" . date("G:i", strtotime($duration)) . "h</td></tr>";
-                                            //echo "<pre>" . print_r($hours, true) . "</pre>";
                                         }
                                     }
                                 }
                             }
-                        }
-                    }?>
+                        }?>
                     </table>
                 </div>
             </div>
+
 
             <!-- Main hero unit for a primary marketing message or call to action -->
             <!--<div class="hero-unit">

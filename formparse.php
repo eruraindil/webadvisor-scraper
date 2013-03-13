@@ -1,6 +1,6 @@
 <?php {
 
-    $formblding = (isset($_GET['building']) ? $_GET['building'] : "");
+    $formbuilding = (isset($_GET['building']) ? $_GET['building'] : "");
 
     $formday = (isset($_GET['day']) ? $_GET['day'] : "");
 
@@ -8,9 +8,9 @@
     $formmin = (isset($_GET['min']) ? $_GET['min'] : "0");
     $formtime = "$formhour:$formmin";
 
-    $formcapacity = (isset($_GET['capacity']) ? $_GET['capacity'] : 0);
+    $formcapacity = (isset($_GET['capacity']) ? (int)$_GET['capacity'] : 0);
 
-    
+
 
 
 } ?>

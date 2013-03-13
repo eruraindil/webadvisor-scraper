@@ -31,11 +31,11 @@ echo $http_req->getResponseBody();*/
 include('datastructures.php');
 
 function parseClass($class, $capacity, &$classrooms) {
-  $days = preg_replace('/(.*)( \d\d:\d\d(AM|PM))( -.*)/','$1',$class);
-  $start_time = preg_replace('/(.*)(\d\d:\d\d(AM|PM))( -.*)/','$2',$class);
-  $end_time = preg_replace('/(.*)(\d\d:\d\d(AM|PM)),(.*)/','$2',$class);
-  $building = preg_replace('/(.*(AM|PM), )(\w+)(, Room.*)/','$3',$class);
-  $room = preg_replace('/(.*Room )(\d+)(.*)/','$2',$class);
+  $days = trim(preg_replace('/(.*)( \d\d:\d\d(AM|PM))( -.*)/','$1',$class));
+  $start_time = trim(preg_replace('/(.*)(\d\d:\d\d(AM|PM))( -.*)/','$2',$class));
+  $end_time = trim(preg_replace('/(.*)(\d\d:\d\d(AM|PM)),(.*)/','$2',$class));
+  $building =trim(preg_replace('/(.*(AM|PM), )(\w+)(, Room.*)/','$3',$class));
+  $room = trim(preg_replace('/(.*Room )(\d+)(.*)/','$2',$class));
 
   $start_time = date("H:i",strtotime($start_time));
   $end_time = date("H:i",strtotime($end_time));
@@ -56,14 +56,14 @@ function parseClass($class, $capacity, &$classrooms) {
     $day = trim($day);
     //echo "$day<br>";
     while(strtotime($start_time) < strtotime($end_time)) {
-      if(trim($building) == "MACK") {
-        $classrooms[trim($building)][trim($room)]['schedule'][trim($day)][trim($start_time)] = true;
-        if(!isset($classrooms[trim($building)][trim($room)]['capacity'])) {
-          $classrooms[trim($building)][trim($room)]['capacity'] = $capacity;
+      //if($building == "MACK") {
+        $classrooms[$building][$room]['schedule'][$day][$start_time] = true;
+        if(!isset($classrooms[$building][$room]['capacity'])) {
+          $classrooms[$building][$room]['capacity'] = $capacity;
         } else {
-          $classrooms[trim($building)][trim($room)]['capacity'] = max($classrooms[trim($building)][trim($room)]['capacity'], $capacity);
+          $classrooms[$building][$room]['capacity'] = max($classrooms[$building][$room]['capacity'], (int)$capacity);
         }
-      }
+      //}
       $start_time = date("H:i",strtotime("$start_time + 30 minutes"));
     }
     $start_time = $start_time_org;
