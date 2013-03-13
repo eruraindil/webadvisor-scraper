@@ -30,7 +30,7 @@ echo $http_req->getResponseBody();*/
 
 include('datastructures.php');
 
-function parseClass($class, $classrooms) {
+function parseClass($class, $capacity, &$classrooms) {
   $days = preg_replace('/(.*)( \d\d:\d\d(AM|PM))( -.*)/','$1',$class);
   $start_time = preg_replace('/(.*)(\d\d:\d\d(AM|PM))( -.*)/','$2',$class);
   $end_time = preg_replace('/(.*)(\d\d:\d\d(AM|PM)),(.*)/','$2',$class);
@@ -40,10 +40,10 @@ function parseClass($class, $classrooms) {
   $start_time = date("H:i",strtotime($start_time));
   $end_time = date("H:i",strtotime($end_time));
 
-  echo "Input parsed:<br>
+  /*echo "Input parsed:<br>
   &nbsp;&nbsp;Days: " . $days . "<br>
   &nbsp;&nbsp;Time: " . $start_time . " - " . $end_time . "<br>
-  &nbsp;&nbsp;Building: " . $building . " " . $room . "<br>";
+  &nbsp;&nbsp;Building: " . $building . " " . $room . "<br>";*/
 
   /*if(!isset($classrooms[trim($building)][trim($room)])) {
     $classrooms[trim($building)][trim($room)] = $calendar;
@@ -56,14 +56,20 @@ function parseClass($class, $classrooms) {
     $day = trim($day);
     //echo "$day<br>";
     while(strtotime($start_time) < strtotime($end_time)) {
-      if(trim($building) == "MACK")
-        $classrooms[trim($building)][trim($room)][trim($day)][trim($start_time)] = true;
+      if(trim($building) == "MACK") {
+        $classrooms[trim($building)][trim($room)]['schedule'][trim($day)][trim($start_time)] = true;
+        if(!isset($classrooms[trim($building)][trim($room)]['capacity'])) {
+          $classrooms[trim($building)][trim($room)]['capacity'] = $capacity;
+        } else {
+          $classrooms[trim($building)][trim($room)]['capacity'] = max($classrooms[trim($building)][trim($room)]['capacity'], $capacity);
+        }
+      }
       $start_time = date("H:i",strtotime("$start_time + 30 minutes"));
     }
     $start_time = $start_time_org;
   }
 
-  return $classrooms;
+  //return $classrooms;
 }
 
 //from http://php.net/manual/en/function.ksort.php
@@ -86,17 +92,22 @@ function tksort(&$array) {
     //$ret = $html->find('p[id*=SEC_MEETING_INFO]');
     //echo "<pre>" . print_r($ret) . "</pre>";
     $lines = file("meeting_info.txt");
+    $capacities = file("capacity.txt");
     
     $classrooms = array();
     
     foreach($lines as $line_num => $line) {
-      echo "<hr>" . $line . "<br>";
+      //echo "<hr>" . $line . "<br>";
         if(preg_match('/.*(LEC|SEM|LAB|EXAM).*/', $line) && !preg_match('/.*(LEC|LAB|SEM|Distance Education) Days TBA.*/', $line)) {
             //echo $line . "<br>";
             //$result = preg_replace('/(.*(LEC|LAB|SEM) )(.*)/', '$3', $line, 1);
             $result = preg_replace('/(\d+\/\d+\/\d+-\d+\/\d+\/\d+ )(.*)/', '$2', $line);
 
             $result = preg_replace('/( \d+\/\d+\/\d+-\d+\/\d+\/\d+ EXAM.*)/', '', $result);
+
+            //echo $capacities[$line_num] . "<br>";
+            $capacity = preg_replace('/\d+ \/ (\d+)/', '$1', $capacities[$line_num]);
+            //echo $capacity . "<br>";
 
             //echo "result now $result <br>";
             //echo $result . "<br>";
@@ -114,7 +125,7 @@ function tksort(&$array) {
               $lecture = preg_replace('/(.*) (\d)+\/(\d)+\/(\d)+.-.(\d)+\/(\d)+\/(\d)+ (LEC).*/', '$1', $lecture);
 
               if(!preg_match('/.*Room TBA.*/', $lecture)) {
-                $classrooms = parseClass($lecture, $classrooms);
+                parseClass($lecture,$capacity, $classrooms);
               }
             }
 
@@ -130,7 +141,7 @@ function tksort(&$array) {
 
                 //for($i = 0; $i < $count; $i++) {
                   //$lab = preg_replace('/(.*) (\d)+\/(\d)+\/(\d)+.-.(\d)+\/(\d)+\/(\d)+ (LAB).*/', '$1', $lab);
-                  $classrooms = parseClass($lab, $classrooms);
+                  parseClass($lab, $capacity, $classrooms);
                 //}
               }
             }
@@ -140,7 +151,7 @@ function tksort(&$array) {
               //echo "Lab " . $lab . "<br>";
               //$sem = preg_replace('/(.*SEM )(.*)/', '$2', $result);
               if(!preg_match('/.*Room TBA.*/', $sem)) {
-                $classrooms = parseClass($sem, $classrooms);
+                parseClass($sem, $capacity, $classrooms);
               }
             }
 
@@ -151,7 +162,7 @@ function tksort(&$array) {
 
     tksort($classrooms);
 
-    echo "<pre>" . print_r($classrooms, true) . "</pre>";
+    //echo "<pre>" . print_r($classrooms, true) . "</pre>";
 
     //$fp = fopen("classrooms.txt", "w");
     //fwrite($fp, print_r($classrooms, true));
