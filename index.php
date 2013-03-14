@@ -180,7 +180,7 @@ include("parser.php");
             <hr>
 
             <footer>
-                <p>Written by Matthew Roberts 2013. Released into the public domain.</p>
+                <p>&copy; Matthew Roberts 2013.</p>
             </footer>
 
         </div> <!-- /container -->
