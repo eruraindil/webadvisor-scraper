@@ -180,7 +180,7 @@ include("parser.php");
             <hr>
 
             <footer>
-                <p>&copy; Matthew Roberts 2013.</p>
+                <p>&copy; 2013 Matthew Roberts</p>
             </footer>
 
         </div> <!-- /container -->
