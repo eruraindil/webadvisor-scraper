@@ -97,13 +97,11 @@ include("parser.php");
                                 foreach($mins as $min):?>
                                     <option <?=($min == $formmin ? "selected" : "");?> value="<?=$min?>"><?=$min?></option>
                                 <?php endforeach;?>
-                                <option value="00">00</option>
-                                <option value="30">30</option>
                             </select>
                         </label>
                         <label class="inline">
                             Capacity
-                            <input type="text" class="input-small" id="capacity" name="capacity" value="<?=($capacity != "" ? $capacity : "")?>">
+                            <input type="text" class="input-small" id="capacity" name="capacity" value="<?=($formcapacity != "" ? $formcapacity : "")?>">
                             <!-- <input type="range" name="capacity" min="1" max="600"> -->
                         </label>
                         <button type="submit" class="btn">Search</button>
@@ -182,7 +180,7 @@ include("parser.php");
             <hr>
 
             <footer>
-                <p>&copy; Matthew Roberts 2013</p>
+                <p>Written by Matthew Roberts 2013. Released into the public domain.</p>
             </footer>
 
         </div> <!-- /container -->
