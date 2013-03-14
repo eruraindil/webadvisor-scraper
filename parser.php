@@ -35,7 +35,7 @@ function parseClass($class, $capacity, &$classrooms) {
   $start_time = trim(preg_replace('/(.*)(\d\d:\d\d(AM|PM))( -.*)/','$2',$class));
   $end_time = trim(preg_replace('/(.*)(\d\d:\d\d(AM|PM)),(.*)/','$2',$class));
   $building =trim(preg_replace('/(.*(AM|PM), )(\w+)(, Room.*)/','$3',$class));
-  $room = trim(preg_replace('/(.*Room )(\d+)(.*)/','$2',$class));
+  $room = trim(preg_replace('/(.*Room )(\w+)(.*)/','$2',$class));
 
   $start_time = date("H:i",strtotime($start_time));
   $end_time = date("H:i",strtotime($end_time));
