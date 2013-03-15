@@ -114,73 +114,68 @@ include("parser.php");
                         <tr>
                             <th>building</th><th>room</th><th>capacity</th><th>duration</th>
                         </tr>
-                        <?php foreach($classrooms as $building => $rooms) {
-                            if(($formbuilding != "" && $building == $formbuilding) || $formbuilding == "") {
-                                foreach($rooms as $room => $attrib) {
-                                    if($attrib['capacity'] >= $formcapacity) {
-                                        foreach($attrib['schedule'] as $day => $hours) {
-                                            if($day == $formday) {
-                                                if(!isset($hours[$formtime])) {
-                                                    echo("<tr><td>$building</td><td>$room</td><td>" . $attrib['capacity'] . "</td>");
+<?php $output = "";
+foreach($classrooms as $building => $rooms) {
+    if(($formbuilding != "" && $building == $formbuilding) || $formbuilding == "") {
+        foreach($rooms as $room => $attrib) {
+            if($attrib['capacity'] >= $formcapacity) {
+                foreach($attrib['schedule'] as $day => $hours) {
+                    if($day == $formday) {
+                        if(!isset($hours[$formtime])) {
+                            $output += "<tr><td>$building</td><td>$room</td><td>" . $attrib['capacity'] . "</td>";
 
-                                                    $uptime = $formtime;
-                                                    $duration = "00:30";
-                                                    //echo "<p>duration = " . date("H:i", $duration) . "</p>";
+                            $uptime = $formtime;
+                            $duration = "00:30";
+                            //echo "<p>duration = " . date("H:i", $duration) . "</p>";
 
-                                                    $uptime = date("H:i", strtotime("$uptime + 30 minutes"));
-                                                    //echo $hours[$uptime];
-                                                    while(!isset($hours[$uptime]) && (strtotime($uptime) < strtotime("20:00"))) {
-                                                        $duration = date("H:i", strtotime("$duration + 30 minutes"));
-                                                        //echo "<p>" . date($duration) . "</p>";
+                            $uptime = date("H:i", strtotime("$uptime + 30 minutes"));
+                            //echo $hours[$uptime];
+                            while(!isset($hours[$uptime]) && (strtotime($uptime) < strtotime("20:00"))) {
+                                $duration = date("H:i", strtotime("$duration + 30 minutes"));
+                                //echo "<p>" . date($duration) . "</p>";
 
-                                                        //loop increment
-                                                        $uptime = date("H:i", strtotime("$uptime + 30 minutes"));
-                                                    }
-
-                                                    echo "<td>" . date("G:i", strtotime($duration)) . "h</td></tr>";
-                                                    //echo "<td colspan='4'><pre>" . print_r($attrib, true) . "</pre></td>";
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                //loop increment
+                                $uptime = date("H:i", strtotime("$uptime + 30 minutes"));
                             }
-                        }?>
+
+                            $output += "<td>" . date("G:i", strtotime($duration)) . "h</td></tr>";
+                            //echo "<td colspan='4'><pre>" . print_r($attrib, true) . "</pre></td>";
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+if($output != "") {
+    $output;
+}?>
                     </table>
+                    <?if($output == ""):?>
+                        <div class="alert alert-info">
+                            No results
+                        </div>
+                    <?php endif;?>
                 </div>
             </div>
-
-
-            <!-- Main hero unit for a primary marketing message or call to action -->
-            <!--<div class="hero-unit">
-                <h1>Hello, world!</h1>
-                <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-                <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
-            </div>-->
-
-            <!-- Example row of columns
-            <div class="row">
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
-                </div>
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
-               </div>
-                <div class="span4">
-                    <h2>Heading</h2>
-                    <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-                    <p><a class="btn" href="#">View details &raquo;</a></p>
-                </div>
-            </div>-->
-
             <hr>
-
             <footer>
-                <p>&copy; 2013 Matthew Roberts</p>
+                <div class="row">
+                    <div class="span6">
+                        <p>
+                            &copy; 2013 Matthew Roberts. <a href="https://twitter.com/eruraindil" class="twitter-follow-button" data-show-count="false">Follow @eruraindil</a>
+                            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                        </p>
+                    </div>
+                    <div class="span6">
+                        <p>Problem? This is BETA software, let me know and I will try to fix it.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span12">
+                        <a href="http://www.github.com/eruraindil/webadvisor-scraper" class="btn">View on GitHub</a>
+                    </div>
+                </div>
             </footer>
 
         </div> <!-- /container -->
