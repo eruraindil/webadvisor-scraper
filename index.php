@@ -1,6 +1,41 @@
 <?php 
 include("formparse.php"); 
 include("parser.php"); 
+
+$output = "";
+
+foreach($classrooms as $building => $rooms) {
+    if(($formbuilding != "" && $building == $formbuilding) || $formbuilding == "") {
+        foreach($rooms as $room => $attrib) {
+            if($attrib['capacity'] >= $formcapacity) {
+                foreach($attrib['schedule'] as $day => $hours) {
+                    if($day == $formday) {
+                        if(!isset($hours[$formtime])) {
+                            $output += "<tr><td>$building</td><td>$room</td><td>" . $attrib['capacity'] . "</td>";
+
+                            $uptime = $formtime;
+                            $duration = "00:30";
+                            //echo "<p>duration = " . date("H:i", $duration) . "</p>";
+
+                            $uptime = date("H:i", strtotime("$uptime + 30 minutes"));
+                            //echo $hours[$uptime];
+                            while(!isset($hours[$uptime]) && (strtotime($uptime) < strtotime("20:00"))) {
+                                $duration = date("H:i", strtotime("$duration + 30 minutes"));
+                                //echo "<p>" . date($duration) . "</p>";
+
+                                //loop increment
+                                $uptime = date("H:i", strtotime("$uptime + 30 minutes"));
+                            }
+
+                            $output += "<td>" . date("G:i", strtotime($duration)) . "h</td></tr>";
+                            //echo "<td colspan='4'><pre>" . print_r($attrib, true) . "</pre></td>";
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -114,42 +149,9 @@ include("parser.php");
                         <tr>
                             <th>building</th><th>room</th><th>capacity</th><th>duration</th>
                         </tr>
-<?php $output = "";
-foreach($classrooms as $building => $rooms) {
-    if(($formbuilding != "" && $building == $formbuilding) || $formbuilding == "") {
-        foreach($rooms as $room => $attrib) {
-            if($attrib['capacity'] >= $formcapacity) {
-                foreach($attrib['schedule'] as $day => $hours) {
-                    if($day == $formday) {
-                        if(!isset($hours[$formtime])) {
-                            $output += "<tr><td>$building</td><td>$room</td><td>" . $attrib['capacity'] . "</td>";
-
-                            $uptime = $formtime;
-                            $duration = "00:30";
-                            //echo "<p>duration = " . date("H:i", $duration) . "</p>";
-
-                            $uptime = date("H:i", strtotime("$uptime + 30 minutes"));
-                            //echo $hours[$uptime];
-                            while(!isset($hours[$uptime]) && (strtotime($uptime) < strtotime("20:00"))) {
-                                $duration = date("H:i", strtotime("$duration + 30 minutes"));
-                                //echo "<p>" . date($duration) . "</p>";
-
-                                //loop increment
-                                $uptime = date("H:i", strtotime("$uptime + 30 minutes"));
-                            }
-
-                            $output += "<td>" . date("G:i", strtotime($duration)) . "h</td></tr>";
-                            //echo "<td colspan='4'><pre>" . print_r($attrib, true) . "</pre></td>";
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-if($output != "") {
-    $output;
-}?>
+                        <?php if($output != "") {
+                            echo $output;
+                        }?>
                     </table>
                     <?if($output == ""):?>
                         <div class="alert alert-info">
