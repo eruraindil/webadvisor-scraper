@@ -167,13 +167,13 @@ if($output != "") {
                             <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
                         </p>
                     </div>
-                    <div class="span6">
-                        <p>Problem? This is BETA software, let me know and I will try to fix it.</p>
+                    <div class="span6 text-right">
+                        <p class="text-info">Problem? This is BETA software, let me know and I will try to fix it.</p>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="span12">
-                        <a href="http://www.github.com/eruraindil/webadvisor-scraper" class="btn">View on GitHub</a>
+                    <div class="span12 text-center">
+                        <a href="https://www.github.com/eruraindil/webadvisor-scraper" class="btn">View on GitHub</a>
                     </div>
                 </div>
             </footer>
