@@ -11,7 +11,7 @@ foreach($classrooms as $building => $rooms) {
                 foreach($attrib['schedule'] as $day => $hours) {
                     if($day == $formday) {
                         if(!isset($hours[$formtime])) {
-                            $output += "<tr><td>$building</td><td>$room</td><td>" . $attrib['capacity'] . "</td>";
+                            $output .= "<tr><td>$building</td><td>$room</td><td>" . $attrib['capacity'] . "</td>";
 
                             $uptime = $formtime;
                             $duration = "00:30";
@@ -27,7 +27,7 @@ foreach($classrooms as $building => $rooms) {
                                 $uptime = date("H:i", strtotime("$uptime + 30 minutes"));
                             }
 
-                            $output += "<td>" . date("G:i", strtotime($duration)) . "h</td></tr>";
+                            $output .= "<td>" . date("G:i", strtotime($duration)) . "h</td></tr>";
                             //echo "<td colspan='4'><pre>" . print_r($attrib, true) . "</pre></td>";
                         }
                     }
