@@ -163,19 +163,17 @@ foreach($classrooms as $building => $rooms) {
             <hr>
             <footer>
                 <div class="row">
-                    <div class="span6">
+                    <div class="span4 text-left">
                         <p>&copy; 2013 Matthew Roberts.</p>
                         <a href="https://twitter.com/eruraindil" class="twitter-follow-button" data-show-count="false">Follow @eruraindil</a>
                         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
                         
                     </div>
-                    <div class="span6 text-right">
-                        <p class="text-info">Problem? This is BETA software, let me know and I will try to fix it.</p>
+                    <div class="span4 text-center">
+                        <a href="https://www.github.com/eruraindil/webadvisor-scraper" class="btn btn-small">View on GitHub</a>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="span12 text-center">
-                        <a href="https://www.github.com/eruraindil/webadvisor-scraper" class="btn">View on GitHub</a>
+                    <div class="span4 text-right">
+                        <p class="text-warning">Problem? This is BETA software, let me know and I will try to fix it.</p>
                     </div>
                 </div>
             </footer>
